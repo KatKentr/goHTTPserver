@@ -33,6 +33,9 @@ func main(){
 //term:=myFunctions.Fibonacci(10)
 //fmt.Println(term)
 
+    fmt.Println(myFunctions.Hello("Kat"))
+
+
     addr := ":4000"
    
     //create a new mux (router)
