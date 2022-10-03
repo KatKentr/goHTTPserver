@@ -23,7 +23,7 @@ func Fibonacci(number int) func(w http.ResponseWriter, r *http.Request) {
   
 	// return the 10th Fibonacci number in the response payload
 	
-	fmt.Fprintf(w, "%d", myFunctions.Fibonacci(number))
+	fmt.Fprintf(w, "The %dth fibonacci term is: %d\n", number,myFunctions.Fibonacci(number))
   }
 
 }
