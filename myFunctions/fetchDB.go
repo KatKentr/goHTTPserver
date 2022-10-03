@@ -17,26 +17,13 @@ import (
 func FetchData() string{
 
 
-//database handle
+    //database handle
     var db *sql.DB
 
-// Capture connection properties.struct Config
-/*
-    cfg := mysql.Config{
-        
-        User:   os.Getenv("DBUSER"),
-        Passwd: os.Getenv("DBPASS"),
-        Net:    "tcp",
-        Addr:   "127.0.0.1:3306",
-        DBName: "fruits",
-        AllowNativePasswords: true,
-        
-    }
-    */
-    
+
     // Get a database handle.
     var err error
-    db, err = sql.Open("mysql", "root:1234_Ken@tcp(127.0.0.1:3306)/test")
+    db, err = sql.Open("mysql", "root:1234_Ken@tcp(127.0.0.1:3306)/fruits")
     if err != nil {
         log.Fatal(err)
     }
@@ -45,10 +32,43 @@ func FetchData() string{
     if pingErr != nil {
         log.Fatal(pingErr)
     }
-     return "Connected!"
+     
+    
+    var (
+    
+           id int
+           a int
+           b string
+           c string
+           d string
+    )
+       
+    
+    rows, err := db.Query("SELECT * FROM dummyData")
+    
+    if err != nil {
+	log.Fatal(err)
+    }
+    
+    defer rows.Close()
+    
+    for rows.Next() {
+	err := rows.Scan(&id, &a, &b,&c,&d)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(id,a,b,c,d)
+   }
+   
+   err = rows.Err()
+   if err != nil {
+	log.Fatal(err)
+   }
     
     
-
+    
+    
+   return "Connected!"
 
 
 
