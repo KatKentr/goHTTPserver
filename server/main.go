@@ -41,9 +41,10 @@ func FetchDB() func(w http.ResponseWriter, r *http.Request){
         
         for _,value := range myData {
 	// return each record from the table in the response payload
-	fmt.Fprintf(w, "%+v\n", value)
+	   fmt.Fprintf(w, "%+v\n", value)
 	//w.Write([]byte(myFunctions.FetchData()))
 	}
+	
   }
 
 }
@@ -54,7 +55,7 @@ func main(){
 //term:=myFunctions.Fibonacci(10)
 //fmt.Println(term)
 
-    fmt.Println(myFunctions.Hello("Kat"))
+    //fmt.Println(myFunctions.Hello("Kat"))
 
 
     addr := ":4000"
