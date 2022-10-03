@@ -5,16 +5,26 @@ package myFunctions
 import (
 
   "database/sql"
-    //"fmt"
+    "fmt"
     "log"
     _"os"
     _"github.com/go-sql-driver/mysql"   //import the MySQL driver
 
 )
 
+ //we will use this struct to hold row data returned from the query
+    type Fruitmix struct {
+    
+           id int
+           a int
+           b string
+           c string
+           d string
+    }
 
 
-func FetchData() string{
+
+func FetchData() ([]Fruitmix){
 
 
     //database handle
@@ -33,15 +43,10 @@ func FetchData() string{
         log.Fatal(pingErr)
     }
      
-    
-    var (
-    
-           id int
-           a int
-           b string
-           c string
-           d string
-    )
+   
+       
+    // A fruits slice to hold data from returned rows.
+    var fruits []Fruitmix  
        
     
     rows, err := db.Query("SELECT * FROM dummyData")
@@ -51,24 +56,28 @@ func FetchData() string{
     }
     
     defer rows.Close()
-    
+    // Loop through rows, using Scan to assign column data to struct fields.
     for rows.Next() {
-	err := rows.Scan(&id, &a, &b,&c,&d)
+    
+        var fr Fruitmix
+	err := rows.Scan(&fr.id, &fr.a, &fr.b,&fr.c,&fr.d)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(id,a,b,c,d)
+	//log.Println(id,a,b,c,d)
+	
+	fruits=append(fruits,fr)
    }
    
    err = rows.Err()
    if err != nil {
 	log.Fatal(err)
    }
-    
-    
-    
-    
-   return "Connected!"
+   
+   //myVar:=fruits
+   //fmt.Printf("Data: %v\n", myVar)
+        
+   return fruits
 
 
 

@@ -22,6 +22,7 @@ func Fibonacci(number int) func(w http.ResponseWriter, r *http.Request) {
   return func(w http.ResponseWriter, r *http.Request){
   
 	// return the 10th Fibonacci number in the response payload
+	
 	fmt.Fprintf(w, "%d", myFunctions.Fibonacci(number))
   }
 
@@ -34,9 +35,15 @@ func FetchDB() func(w http.ResponseWriter, r *http.Request){
    //error handling sould be normally added: if number ==nil ...
 
   return func(w http.ResponseWriter, r *http.Request){
-  
-	// return data from the table in the response payload
-	fmt.Fprintf(w, "%d", myFunctions.FetchData())
+        
+        //retrieve table data
+        myData := myFunctions.FetchData()
+        
+        for _,value := range myData {
+	// return each record from the table in the response payload
+	fmt.Fprintf(w, "%+v\n", value)
+	//w.Write([]byte(myFunctions.FetchData()))
+	}
   }
 
 }
