@@ -28,6 +28,20 @@ func Fibonacci(number int) func(w http.ResponseWriter, r *http.Request) {
 }
 
 
+
+func FetchDB() func(w http.ResponseWriter, r *http.Request){
+   
+   //error handling sould be normally added: if number ==nil ...
+
+  return func(w http.ResponseWriter, r *http.Request){
+  
+	// return data from the table in the response payload
+	fmt.Fprintf(w, "%d", myFunctions.FetchData())
+  }
+
+}
+
+
 func main(){
 
 //term:=myFunctions.Fibonacci(10)
@@ -48,6 +62,7 @@ func main(){
     mux.HandleFunc("/fibonacci10",Fibonacci(10))
     mux.HandleFunc("/fibonacci20",Fibonacci(20))
     mux.HandleFunc("/fibonacci30",Fibonacci(30))
+    mux.HandleFunc("/fetchDB_test",FetchDB())
      
     
     
