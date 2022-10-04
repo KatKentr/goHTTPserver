@@ -24,9 +24,10 @@ import (
     
    //database handle
     var db *sql.DB
+  
     
- //returns a db handle   
-func connectToDB() *sql.DB{
+ //returns a reference to a db handle   
+func ConnectToDB() *sql.DB{
 
 
        // Get a database handle.
@@ -35,11 +36,20 @@ func connectToDB() *sql.DB{
     if err != nil {
         log.Fatal(err)
     }
+    
+       
+    // Set the number of open connections (in-use + idle) to a maximum total of 495
+    //db.SetConnMaxLifetime(time.Minute * 3)
+    db.SetMaxOpenConns(245)
+    db.SetMaxIdleConns(245)
+    
 
     pingErr := db.Ping()
     if pingErr != nil {
         log.Fatal(pingErr)
     }
+    
+    //fmt.Println("Connected!")
      
      return db
 
@@ -47,10 +57,10 @@ func connectToDB() *sql.DB{
 
 
 //retries a table from the db and returns a slice of structs,each struct contains a row of the table
-func FetchData() ([]Fruitmix){
+func FetchData(db *sql.DB) ([]Fruitmix){
 
 
-    db := connectToDB()   //invoke function to get db handle
+    //db := connectToDB()   //invoke function to get db handle
    
        
     // A fruits slice to hold data from returned rows.
@@ -66,7 +76,7 @@ func FetchData() ([]Fruitmix){
     //Defer closing rows so that any resources it holds will be released when the function exits.
     defer rows.Close()
     
-    defer db.Close()   //!Attention not sure if it is recommended to close the connection
+    //defer db.Close()   //!Attention not sure if it is recommended to close the connection
     
     // Loop through rows, using Scan to assign column data to struct fields.
     for rows.Next() {

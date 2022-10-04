@@ -12,7 +12,17 @@ import (
 
 "log"
 
+//"github.com/go-sql-driver/mysql"
+
+"database/sql"
+
 )
+
+//parse command line to check which test case it is(maybe not needed though). TO DO: Consider error handling in case the database server is down
+
+
+
+
 
 //returns the actual HTTP handler function
 func Fibonacci(number int) func(w http.ResponseWriter, r *http.Request) {
@@ -30,14 +40,14 @@ func Fibonacci(number int) func(w http.ResponseWriter, r *http.Request) {
 
 
 
-func FetchDB() func(w http.ResponseWriter, r *http.Request){
+func FetchDB(db *sql.DB) func(w http.ResponseWriter, r *http.Request){
    
    //error handling sould be normally added: if number ==nil ...
 
   return func(w http.ResponseWriter, r *http.Request){
         
         //retrieve table data
-        myData := myFunctions.FetchData()
+        myData := myFunctions.FetchData(db)
         
         for _,value := range myData {
 	// return each record from the table in the response payload
@@ -59,6 +69,12 @@ func main(){
 
 
     addr := ":4000"
+    
+    //retrieve a reference to db handle
+    db := myFunctions.ConnectToDB()
+    
+    
+    
    
     //create a new mux (router)
     //the mux calls different functions for
@@ -70,7 +86,7 @@ func main(){
     mux.HandleFunc("/fibonacci10",Fibonacci(10))
     mux.HandleFunc("/fibonacci20",Fibonacci(20))
     mux.HandleFunc("/fibonacci30",Fibonacci(30))
-    mux.HandleFunc("/fetchDB_test",FetchDB())
+    mux.HandleFunc("/fetchDB_test",FetchDB(db))
      
     
     
