@@ -8,13 +8,13 @@ import (
 
 "net/http"
 
-//"os"   although not used yet
+//"os"   //although not used yet
 
 "log"
 
-//"github.com/go-sql-driver/mysql"
-
 "database/sql"
+
+"flag"
 
 )
 
@@ -62,20 +62,38 @@ func FetchDB(db *sql.DB) func(w http.ResponseWriter, r *http.Request){
 
 func main(){
 
-//term:=myFunctions.Fibonacci(10)
-//fmt.Println(term)
+
 
     //fmt.Println(myFunctions.Hello("Kat"))
 
+    testcase := flag.String("testcase","","test-case: image or fibonacci or fetchDB")
+    //testcase := os.Args[1]
+    
+    //fmt.Println("Default value of cmd argument is:",*testcase)
+    
+    flag.Parse()
+    
+    fmt.Println("value of testcase flag is:",*testcase)
 
     addr := ":4000"
     
-    //retrieve a reference to db handle
-    db := myFunctions.ConnectToDB()
+    var db *sql.DB
     
     
+    if *testcase=="dbTest" {
+        
+        //retrieve a reference to db handle
+          db = myFunctions.ConnectToDB()
+     } else {
+         
+         db = nil
+     
+     }
+         
+        
     
-   
+    
+  
     //create a new mux (router)
     //the mux calls different functions for
     //different resource paths

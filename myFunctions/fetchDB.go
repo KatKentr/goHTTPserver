@@ -5,9 +5,9 @@ package myFunctions
 import (
 
   "database/sql"
-    _"fmt"
+    //"fmt"
     "log"
-    _"os"
+    //"os"
     _"github.com/go-sql-driver/mysql"   //import the MySQL driver
 
 )
