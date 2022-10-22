@@ -60,6 +60,11 @@ func FetchDB(db *sql.DB) func(w http.ResponseWriter, r *http.Request){
 }
 
 
+func staticFileHandler(w http.ResponseWriter, r *http.Request) {
+    http.ServeFile(w, r, "./../serve_image/100kB_image.png")
+}
+
+
 func main(){
 
 
@@ -105,6 +110,7 @@ func main(){
     mux.HandleFunc("/fibonacci20",Fibonacci(20))
     mux.HandleFunc("/fibonacci30",Fibonacci(30))
     mux.HandleFunc("/fetchDB_test",FetchDB(db))
+    mux.HandleFunc("/fetch_image",staticFileHandler)
      
     
     
