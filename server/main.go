@@ -15,6 +15,7 @@ import (
 "database/sql"
 
 "flag"
+"html/template"
 
 )
 
@@ -33,7 +34,10 @@ func Fibonacci(number int) func(w http.ResponseWriter, r *http.Request) {
   
 	// return the 10th Fibonacci number in the response payload
 	
-	fmt.Fprintf(w, "The %dth term of the fibonacci sequence is: %d\n", number,myFunctions.Fibonacci(number))
+	//fmt.Fprintf(w, "The %dth term of the fibonacci sequence is: %d\n", number,myFunctions.Fibonacci(number))
+	 t, _ := template.ParseFiles("fib_page.html")
+	 Term :=myFunctions.Fibonacci(number)
+         t.Execute(w, Term)
   }
 
 }
