@@ -21,7 +21,11 @@ import (
 
 //parse command line to check which test case it is(maybe not needed though). TO DO: Consider error handling in case the database server is down
 
+type FibFields struct {
 
+   Num,Term int
+
+}
 
 
 
@@ -29,15 +33,20 @@ import (
 func Fibonacci(number int) func(w http.ResponseWriter, r *http.Request) {
 
 //error handling sould be normally added: if number ==nil ...
+  var vars=FibFields{Num: number, Term: myFunctions.Fibonacci(number)}
 
   return func(w http.ResponseWriter, r *http.Request){
+  
+        //add headers
+         w.Header().Set("Server", "Go/1.19.1 (Ubuntu)")
+         w.Header().Set("Connection", "keep-alive")
   
 	// return the 10th Fibonacci number in the response payload
 	
 	//fmt.Fprintf(w, "The %dth term of the fibonacci sequence is: %d\n", number,myFunctions.Fibonacci(number))
 	 t, _ := template.ParseFiles("fib_page.html")
-	 Term :=myFunctions.Fibonacci(number)
-         t.Execute(w, Term)
+	 //Term :=myFunctions.Fibonacci(number)
+         t.Execute(w, vars)
   }
 
 }
