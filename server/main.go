@@ -1,3 +1,5 @@
+//Execution: go run main.go -testcase="name_of_test_case"
+
 package main
 
 import (
@@ -8,14 +10,14 @@ import (
 
 "net/http"
 
-//"os"   //although not used yet
-
 "log"
 
 "database/sql"
 
 "flag"
 "html/template"
+
+//"net/http/pprof"
 
 )
 
@@ -85,7 +87,6 @@ func main(){
     //fmt.Println(myFunctions.Hello("Kat"))
 
     testcase := flag.String("testcase","","test-case: image or fibonacci or fetchDB")
-    //testcase := os.Args[1]
     
     //fmt.Println("Default value of cmd argument is:",*testcase)
     
@@ -124,9 +125,7 @@ func main(){
     mux.HandleFunc("/fibonacci30",Fibonacci(30))
     mux.HandleFunc("/fetchDB_test",FetchDB(db))
     mux.HandleFunc("/fetch_image",staticFileHandler)
-     
-    
-    
+       
     
      //start the web server using the mux as the root handler,
     //and report any errors that occur.
