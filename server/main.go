@@ -17,8 +17,6 @@ import (
 "flag"
 "html/template"
 
-//"net/http/pprof"
-
 //"time" used for execution timing
 //"os" used to write to file
 
@@ -26,7 +24,7 @@ import (
 
 )
 
-//parse command line to check which test case it is(maybe not needed though). TO DO: Consider error handling in case the database server is down
+
 
 type FibFields struct {
 
@@ -35,11 +33,9 @@ type FibFields struct {
 }
 
 
-
 //returns the actual HTTP handler function (closure)
 func Fibonacci(number int) func(w http.ResponseWriter, r *http.Request) {
 
-//error handling sould be normally added: if number ==nil ...
   var vars=FibFields{Num: number, Term: myFunctions.Fibonacci(number)}
 
   return func(w http.ResponseWriter, r *http.Request){
@@ -58,6 +54,7 @@ func Fibonacci(number int) func(w http.ResponseWriter, r *http.Request) {
 	 fmt.Fprintf(w, "The %dth term of the fibonacci sequence is: %d, took (ms) %.6f\n", number,term,elapsed.Seconds()*1000)
 	 */ 
 	 
+	 //pass paremeters to html
 	 t, _ := template.ParseFiles("fib_page.html")
 	 
          t.Execute(w, vars)
@@ -82,8 +79,6 @@ func Fibonacci(number int) func(w http.ResponseWriter, r *http.Request) {
 
 func FetchDB(db *sql.DB) func(w http.ResponseWriter, r *http.Request){
    
-   //error handling sould be normally added: if number ==nil ...
-
   return func(w http.ResponseWriter, r *http.Request){
         
         //retrieve table data
@@ -108,14 +103,11 @@ func staticFileHandler(w http.ResponseWriter, r *http.Request) {
 func main(){
 
 
-    // Allocate three logical processors for the scheduler to use.
+    // Allocate n logical processors for the scheduler to use (performance innvestigation)
     //runtime.GOMAXPROCS(6)
-
-    //fmt.Println(myFunctions.Hello("Kat"))
-
-    testcase := flag.String("testcase","","test-case: image or fibonacci or fetchDB")
     
-    //fmt.Println("Default value of cmd argument is:",*testcase)
+    //parse command line to check which test case it is. TO DO: Consider error handling in case the database server is down
+    testcase := flag.String("testcase","","test-case: image or fibonacci or fetchDB")
     
     flag.Parse()
     
@@ -136,17 +128,13 @@ func main(){
      
      }
          
-        
-    
-    
-  
+         
     //create a new mux (router)
     //the mux calls different functions for
     //different resource paths
     mux := http.NewServeMux()
     
-    //tell it to call the Fibonacci(number) function
-    //when someone requests the resource path `/fibonacci10` or `/fibonacci20`  or `/fibonacci30`
+    //different handler functions for different resource paths, depending on the test case
     mux.HandleFunc("/fibonacci10",Fibonacci(10))
     mux.HandleFunc("/fibonacci20",Fibonacci(20))
     mux.HandleFunc("/fibonacci30",Fibonacci(30))

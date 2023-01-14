@@ -12,7 +12,7 @@ import (
 
 )
 
- //we will use this struct to hold row data returned from the query
+ //we will use this struct to hold raw data returned from the query
     type Fruitmix struct {
     
            id int
@@ -76,7 +76,6 @@ func FetchData(db *sql.DB) ([]Fruitmix){
     //Defer closing rows so that any resources it holds will be released when the function exits.
     defer rows.Close()
     
-    //defer db.Close()   //!Attention not sure if it is recommended to close the connection
     
     // Loop through rows, using Scan to assign column data to struct fields.
     for rows.Next() {
