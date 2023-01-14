@@ -19,6 +19,11 @@ import (
 
 //"net/http/pprof"
 
+//"time" used for execution timing
+//"os" used to write to file
+
+//"runtime"
+
 )
 
 //parse command line to check which test case it is(maybe not needed though). TO DO: Consider error handling in case the database server is down
@@ -31,7 +36,7 @@ type FibFields struct {
 
 
 
-//returns the actual HTTP handler function
+//returns the actual HTTP handler function (closure)
 func Fibonacci(number int) func(w http.ResponseWriter, r *http.Request) {
 
 //error handling sould be normally added: if number ==nil ...
@@ -42,13 +47,33 @@ func Fibonacci(number int) func(w http.ResponseWriter, r *http.Request) {
         //add headers
          w.Header().Set("Server", "Go/1.19.1 (Ubuntu)")
          w.Header().Set("Connection", "keep-alive")
-  
-	// return the 10th Fibonacci number in the response payload
-	
-	//fmt.Fprintf(w, "The %dth term of the fibonacci sequence is: %d\n", number,myFunctions.Fibonacci(number))
+         
+         /* for execution time investigation
+         start := time.Now()
+	 return the 10th Fibonacci number in the response payload
+	 term :=myFunctions.Fibonacci(number)
+        
+         elapsed := time.Since(start)
+         fmt.Printf(" \ntook %0.12f \n", elapsed.Seconds()*1000)
+	 fmt.Fprintf(w, "The %dth term of the fibonacci sequence is: %d, took (ms) %.6f\n", number,term,elapsed.Seconds()*1000)
+	 */ 
+	 
 	 t, _ := template.ParseFiles("fib_page.html")
-	 //Term :=myFunctions.Fibonacci(number)
+	 
          t.Execute(w, vars)
+         
+         //write to file
+          /*
+        file, err := os.OpenFile("timings_go_fibonacci.csv", os.O_APPEND|os.O_WRONLY, 0666)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		
+		fmt.Fprintf(file,"%d,%.6f\n",term,elapsed.Seconds()*1000)
+	}
+	file.Close()	
+	*/ 
+
   }
 
 }
@@ -83,6 +108,8 @@ func staticFileHandler(w http.ResponseWriter, r *http.Request) {
 func main(){
 
 
+    // Allocate three logical processors for the scheduler to use.
+    //runtime.GOMAXPROCS(6)
 
     //fmt.Println(myFunctions.Hello("Kat"))
 
